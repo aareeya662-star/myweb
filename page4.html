@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>ฟอร์มชำระเงิน</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body{
+    font-family:Tahoma;
+    background:linear-gradient(to right,#f06292,#f48fb1,#f8bbd0);
+}
+
+.container{
+    width:500px;
+    margin:40px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#2196F3;
+    color:white;
+    border:none;
+    border-radius:6px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>แบบฟอร์มชำระเงิน</h2>
+
+<div>
+<label>ข้อมูลลูกหนี้</label>
+<input type="text" id="debtor">
+</div>
+
+<br>
+
+<label><input type="checkbox" value="เงินสด" class="pay"> เงินสด</label><br>
+<label><input type="checkbox" value="เงินโอน" class="pay"> เงินโอน</label><br>
+<label><input type="checkbox" value="ไม่ชำระ" class="pay"> ไม่ชำระ</label>
+
+<br><br>
+
+<label>แนบสลิป</label>
+<input type="file" id="slip">
+
+<br><br>
+
+<label>หมายเหตุ</label>
+<textarea id="note"></textarea>
+
+<br><br>
+
+
+<button onclick="goHome()">กลับหน้าหลัก</button>
+
+</div>
+
+<script>
+
+// โหลดข้อมูลจากทุกหน้า
+let allData = JSON.parse(localStorage.getItem("loginExcel")) || [];
+
+function savePayment(){
+
+    let debtor = document.getElementById("debtor").value;
+    let note = document.getElementById("note").value;
+
+    // รวมค่าการชำระเงิน
+    let payments = [];
+    document.querySelectorAll(".pay:checked").forEach(cb=>{
+        payments.push(cb.value);
+    });
+
+    // เก็บชื่อไฟล์สลิป
+    let slipFile = document.getElementById("slip").files[0];
+    let slipName = slipFile ? slipFile.name : "";
+
+    if(allData.length === 0){
+        alert("ไม่พบข้อมูลก่อนหน้า");
+        return;
+    }
+
+    // เพิ่มข้อมูลลงรายการล่าสุด
+    let lastIndex = allData.length - 1;
+
+    allData[lastIndex].push(debtor);
+    allData[lastIndex].push(payments.join(", "));
+    allData[lastIndex].push(slipName);
+    allData[lastIndex].push(note);
+
+    localStorage.setItem("loginExcel", JSON.stringify(allData));
+
+    exportExcel();
+
+    alert("บันทึกเรียบร้อย");
+}
+
+function exportExcel(){
+
+    let data = [
+        ["ชื่อผู้ใช้","รหัสผ่าน","เวลา","สาย","ลูกหนี้","ผู้ชำระ","รูปแบบชำระ","ชื่อไฟล์สลิป","หมายเหตุ"],
+        ...allData
+    ];
+
+    let ws = XLSX.utils.aoa_to_sheet(data);
+    let wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, ws, "ข้อมูล");
+
+    XLSX.writeFile(wb,"ข้อมูลผู้เข้าใช้.xlsx");
+}
+
+function goHome(){
+    window.location.href = "page1.html";
+}
+
+</script>
+
+</body>
+</html>

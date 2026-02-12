@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>เข้าสู่ระบบ</title>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<style>
+body{
+    font-family:Tahoma;
+    background:linear-gradient(to right,#f06292,#f48fb1,#f8bbd0);
+}
+
+.container{
+    width:350px;
+    margin:100px auto;
+    background:white;
+    padding:25px;
+    border-radius:15px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.2);
+    text-align:center;
+}
+
+input{
+    width:90%;
+    padding:12px;
+    margin:10px;
+    border-radius:8px;
+    border:1px solid #ccc;
+}
+
+button{
+    width:95%;
+    padding:12px;
+    background:#6c63ff;
+    color:white;
+    border:none;
+    border-radius:8px;
+    font-size:16px;
+    cursor:pointer;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>เข้าสู่ระบบ</h2>
+
+<input type="text" id="username" placeholder="ชื่อผู้ใช้">
+<input type="password" id="password" placeholder="รหัสผ่าน">
+
+<button onclick="login()">เข้าสู่ระบบ</button>
+
+</div>
+
+<script>
+
+// กำหนด user
+const users = {
+    "admin":"1234",
+    "earn":"9999",
+    "staff":"1111"
+};
+
+// โหลดข้อมูลเก่า
+let loginData = JSON.parse(localStorage.getItem("loginExcel")) || [];
+
+function login(){
+
+    let username = document.getElementById("username").value;
+    let password = document.getElementById("password").value;
+
+    if(users[username] === password){
+
+        let now = new Date().toLocaleString();
+
+        // เพิ่มข้อมูลใหม่
+        loginData.push([username,password,now]);
+
+        // บันทึกลงเครื่อง
+        localStorage.setItem("loginExcel", JSON.stringify(loginData));
+
+        // Export Excel
+        exportExcel();
+
+        // ไปหน้าถัดไป
+        window.location.href = "page2.html";
+
+    }else{
+        alert("ชื่อผู้ใช้หรือรหัสผ่านไม่ถูกต้อง");
+    }
+}
+
+// ส่งออก Excel รวมไฟล์เดียว
+function exportExcel(){
+
+    let data = [["ชื่อผู้ใช้","รหัสผ่าน","เวลา","สาย","ลูกหนี้"], ...loginData];
+
+    let ws = XLSX.utils.aoa_to_sheet(data);
+    let wb = XLSX.utils.book_new();
+
+    XLSX.utils.book_append_sheet(wb, ws, "ข้อมูลผู้เข้าใช้");
+
+    XLSX.writeFile(wb,"ข้อมูลผู้เข้าใช้.xlsx");
+}
+
+</script>
+
+</body>
+</html>

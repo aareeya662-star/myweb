@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>สาย 110</title>
+</head>
+<style>
+body{
+    font-family:Tahoma;
+    background:linear-gradient(to right,#f06292,#f48fb1,#f8bbd0);
+}
+
+.container{
+    width:450px;
+    margin:50px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+}
+
+.debtor-list{
+    list-style:none;
+    padding:0;
+}
+
+.debtor-list li{
+    padding:12px;
+    margin:8px 0;
+    background:#e9f2ff;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.debtor-list li:hover{
+    background:#cfe3ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>รายชื่อลูกหนี้</h2>
+
+<ul class="debtor-list">
+<li onclick="selectDebtor('สมชาย ใจดี')">สมชาย ใจดี</li>
+<li onclick="selectDebtor('สายใจ รักดี')">สายใจ รักดี</li>
+<li onclick="selectDebtor('ประยุทธ มั่งมี')">ประยุทธ มั่งมี</li>
+<li onclick="selectDebtor('วรัญญา ศรีสุข')">วรัญญา ศรีสุข</li>
+</ul>
+
+</div>
+
+<script>
+
+// โหลดข้อมูลจากหน้า 1 และ 2
+let allData = JSON.parse(localStorage.getItem("loginExcel")) || [];
+
+function selectDebtor(name){
+
+    // ถ้าไม่มีข้อมูล ให้สร้างรายการใหม่
+    if(allData.length === 0){
+        allData.push([]);
+    }
+
+    // เพิ่มชื่อลูกหนี้ในรายการล่าสุด
+    let lastIndex = allData.length - 1;
+    allData[lastIndex].push(name);
+
+    // บันทึกลง localStorage
+    localStorage.setItem("loginExcel", JSON.stringify(allData));
+
+    // ไปหน้า 4
+    window.location.href = "page4.html";
+}
+
+</script>
+</html>

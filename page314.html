@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>สาย 314</title>
+</head>
+<style>
+body{
+    font-family:Tahoma;
+    background:linear-gradient(to right,#f06292,#f48fb1,#f8bbd0);
+}
+
+.container{
+    width:450px;
+    margin:50px auto;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    box-shadow:0 0 8px rgba(0,0,0,0.2);
+}
+
+.debtor-list{
+    list-style:none;
+    padding:0;
+}
+
+.debtor-list li{
+    padding:12px;
+    margin:8px 0;
+    background:#e9f2ff;
+    border-radius:6px;
+    cursor:pointer;
+}
+
+.debtor-list li:hover{
+    background:#cfe3ff;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+
+<h2>รายชื่อลูกหนี้</h2>
+
+<ul class="debtor-list">
+<li onclick="selectDebtor('สุดใจ โรงโป๊ะ')">สุดใจ โรงโป๊ะ</li>
+<li onclick="selectDebtor('เจ้าพระยาค้าข้าว ตะเคียนเตี้ย')">เจ้าพระยาค้าข้าว ตะเคียนเตี้ย</li>
+<li onclick="selectDebtor('ณรงค์ หนองสะเดา')">ณรงค์ หนองสะเดา</li>
+<li onclick="selectDebtor('วีต้นโพธิ์ ซ.โรงเรียนศรีสุวิท')">วีต้นโพธิ์ ซ.โรงเรียนศรีสุวิท</li>
+<li onclick="selectDebtor('ร้านRinRin')">ร้านRinRin</li>
+<li onclick="selectDebtor('เหน่ง มินิมาร์ท เขาไม้แก้ว)">เหน่ง มินิมาร์ท เขาไม้แก้ว</li>
+<li onclick="selectDebtor('ป้าเล็ก ร้านล้านเก้า')">ป้าเล็ก ร้านล้านเก้า</li>
+<li onclick="selectDebtor('ธรณินทร์ ทองใส')">ธรณินทร์ ทองใส</li>
+<li onclick="selectDebtor('โป้ซัง ไก่ย่างวิเชียร')">โป้ซัง ไก่ย่างวิเชียร</li>
+<li onclick="selectDebtor('รังสิต ขยันทำ')">รังสิต ขยันทำ</li>
+<li onclick="selectDebtor('เณอ มิริมาร์ท')">เณอ มินิมาร์ท</li>
+</ul>
+
+</div>
+
+<script>
+
+// โหลดข้อมูลจากหน้า 1 และ 2
+let allData = JSON.parse(localStorage.getItem("loginExcel")) || [];
+
+function selectDebtor(name){
+
+    // ถ้าไม่มีข้อมูล ให้สร้างรายการใหม่
+    if(allData.length === 0){
+        allData.push([]);
+    }
+
+    // เพิ่มชื่อลูกหนี้ในรายการล่าสุด
+    let lastIndex = allData.length - 1;
+    allData[lastIndex].push(name);
+
+    // บันทึกลง localStorage
+    localStorage.setItem("loginExcel", JSON.stringify(allData));
+
+    // ไปหน้า 4
+    window.location.href = "page4.html";
+}
+
+</script>
+</html>
